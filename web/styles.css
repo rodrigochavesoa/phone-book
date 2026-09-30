@@ -1,0 +1,736 @@
+/* ==========================================================================
+   DESIGN SYSTEM - RETRO 90S PHONE BOOK (ATOMIC DESIGN ARCHITECTURE)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS (CSS VARIABLES)
+   -------------------------------------------------------------------------- */
+:root {
+    /* Cores Retrô e Sem Tons de Roxo (Purple Free) */
+    --token-color-desk: #2c2018;          /* Fundo imitando mesa de madeira escura */
+    --token-color-paper: #fefcf3;         /* Papel amarelado vintage / Yellow Pages */
+    --token-color-paper-shadow: #e2ddc4;  /* Sombra suave de papel antigo */
+    --token-color-text-dark: #1b1612;     /* Tinta preta envelhecida / Sepia escuro */
+    --token-color-text-muted: #61564b;    /* Grafite apagado de lapiseira */
+    --token-color-green-ink: #1e4d3c;     /* Verde clássico de agendas executivas antigas */
+    --token-color-green-light: #e8f0ec;   /* Verde claro lavado para seleções/hover */
+    --token-color-red-ink: #aa3824;       /* Vermelho carimbo / marca-texto retrô */
+    --token-color-gold: #c2953e;          /* Detalhes dourados das abas e ferragens */
+    --token-color-rule: #dfd9bd;          /* Linhas divisórias horizontais do fichário */
+    --token-color-ledger-blue: #a3c4d9;   /* Linhas azuladas horizontais de pauta */
+    --token-color-error-bg: #faebe8;      /* Fundo de erro (tom pastel avermelhado) */
+
+    /* Tipografia Vintage */
+    --token-font-heading: 'Special Elite', Georgia, serif;
+    --token-font-body: 'Courier Prime', 'Courier New', monospace;
+    --token-font-sans: 'Outfit', 'Inter', sans-serif;
+
+    /* Espaçamentos Padronizados */
+    --token-space-xs: 0.5rem;
+    --token-space-sm: 0.75rem;
+    --token-space-md: 1.25rem;
+    --token-space-lg: 2rem;
+    --token-space-xl: 3.5rem;
+
+    /* Bordas e Sombras */
+    --token-radius-sm: 4px;
+    --token-radius-md: 8px;
+    --token-radius-lg: 12px;
+    --token-shadow-desk: 0 10px 30px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(0, 0, 0, 0.2);
+    --token-shadow-flat: 3px 3px 0px rgba(44, 32, 24, 0.15);
+}
+
+html {
+    scrollbar-gutter: stable;
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET & BASE ESTILOS
+   -------------------------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    font-family: var(--token-font-body);
+    background-color: var(--token-color-desk);
+    color: var(--token-color-text-dark);
+    min-height: 100vh;
+    --body-padding-y: var(--token-space-lg);
+    padding-top: var(--body-padding-y);
+    padding-bottom: calc(var(--body-padding-y) + env(safe-area-inset-bottom));
+    padding-left: var(--token-space-xs);
+    padding-right: var(--token-space-xs);
+    overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   3. TEMPLATES & LAYOUT
+   -------------------------------------------------------------------------- */
+/* Fundo que simula uma mesa de escritório antiga */
+.tpl-desk-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
+        linear-gradient(135deg, #372a20 0%, #1e1510 100%);
+    background-attachment: fixed;
+}
+
+/* Container principal da agenda/fichário físico */
+.tpl-phone-book {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Grid de fichas de resultados */
+.tpl-results-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--token-space-md);
+}
+
+@media (min-width: 640px) {
+    .tpl-results-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. ORGANISMOS
+   -------------------------------------------------------------------------- */
+.org-phone-book {
+    position: relative;
+    background-color: var(--token-color-paper);
+    border: 1px solid var(--token-color-paper-shadow);
+    border-radius: var(--token-radius-lg);
+    box-shadow: var(--token-shadow-desk);
+}
+
+.org-header {
+    text-align: center;
+    margin-bottom: var(--token-space-lg);
+    position: relative;
+}
+
+.org-search-section {
+    margin-bottom: var(--token-space-md);
+}
+
+.org-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--token-space-md);
+}
+
+.org-results-section {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--token-space-md);
+}
+
+.org-footer {
+    text-align: center;
+    margin-top: var(--token-space-lg);
+    padding: var(--token-space-md) var(--token-space-sm);
+    background-color: var(--token-color-paper);
+    position: relative;
+    z-index: 5;
+}
+
+.org-footer .atom-horizontal-divider {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. MOLÉCULAS
+   -------------------------------------------------------------------------- */
+/* Barra lateral física com os anéis metálicos do caderno */
+.mol-spiral-binding {
+    position: absolute;
+    left: 20px;
+    top: 50px;
+    bottom: 50px;
+    width: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Abas de índice alfabético coladas na lateral direita da agenda */
+.mol-tab-strip {
+    position: absolute;
+    right: -28px;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 2;
+}
+
+/* Folha/Área de conteúdo com a pauta e margem vermelha */
+.mol-page-content {
+    display: flex;
+    flex-direction: column;
+    padding: var(--token-space-xl) var(--token-space-lg) var(--token-space-lg) calc(var(--token-space-xl) + 10px);
+    background-image: 
+        linear-gradient(var(--token-color-ledger-blue) 1px, transparent 1px);
+    background-size: 100% 32px;
+    border-left: 2px solid var(--token-color-red-ink); /* Margem vermelha clássica de caderno */
+    border-radius: var(--token-radius-lg);
+    min-height: calc(100vh - 2 * var(--body-padding-y) - env(safe-area-inset-bottom));
+}
+
+/* Barra de pesquisa em formato de ficha de inserção */
+.mol-search-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--token-space-sm);
+    background-color: var(--token-color-paper);
+    border: 2px solid var(--token-color-green-ink);
+    border-radius: var(--token-radius-sm);
+    padding: var(--token-space-xs) var(--token-space-sm);
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.mol-search-bar:focus-within {
+    border-color: var(--token-color-gold);
+    box-shadow: 0 0 0 3px rgba(194, 149, 62, 0.2), inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Ficha de dados (Card) */
+.result-card {
+    background-color: #fbf9ef;
+    border: 1px solid var(--token-color-rule);
+    border-top: 3px solid var(--token-color-green-ink);
+    border-radius: var(--token-radius-sm);
+    padding: var(--token-space-md);
+    box-shadow: var(--token-shadow-flat);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    scroll-margin-top: var(--token-space-md);
+}
+
+.result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0px rgba(44, 32, 24, 0.15);
+    background-color: #fcfbf4;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--token-color-rule);
+    padding-bottom: var(--token-space-xs);
+    margin-bottom: var(--token-space-sm);
+}
+
+/* Metadados e Loader */
+.mol-results-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 32px;
+}
+
+.mol-loader {
+    display: flex;
+    align-items: center;
+    gap: var(--token-space-xs);
+}
+
+.mol-empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--token-space-xl) var(--token-space-lg);
+    opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   6. ÁTOMOS
+   -------------------------------------------------------------------------- */
+/* Anel individual do fichário em degradê metálico */
+.atom-binding-ring {
+    width: 32px;
+    height: 12px;
+    background: linear-gradient(180deg, #d3cfc5 0%, #7e796e 50%, #3e3a33 100%);
+    border-radius: 6px;
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.35);
+    margin-left: -24px;
+}
+
+/* Aba individual de índice */
+.atom-tab {
+    background-color: #e5deb7;
+    color: var(--token-color-text-dark);
+    font-family: var(--token-font-heading);
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 6px 12px 6px 8px;
+    border-radius: 0 4px 4px 0;
+    border: 1px solid var(--token-color-rule);
+    border-left: none;
+    cursor: default;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.atom-tab.active-tab {
+    background-color: var(--token-color-green-ink);
+    color: var(--token-color-paper);
+    transform: translateX(6px);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+/* Elementos do Cabeçalho */
+.atom-logo {
+    font-family: var(--token-font-heading);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: var(--token-space-sm);
+}
+
+.retro-stamp {
+    background-color: var(--token-color-red-ink);
+    color: var(--token-color-paper);
+    padding: 2px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    transform: rotate(-3deg);
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.atom-title {
+    font-family: var(--token-font-heading);
+    font-size: 2.2rem;
+    color: var(--token-color-text-dark);
+    line-height: 1.2;
+}
+
+.atom-subtitle {
+    font-family: var(--token-font-sans);
+    color: var(--token-color-text-muted);
+    font-size: 0.95rem;
+    font-weight: 400;
+    margin-top: var(--token-space-xs);
+}
+
+.atom-horizontal-divider {
+    height: 1px;
+    background-color: var(--token-color-rule);
+    margin: var(--token-space-sm) 0;
+    border-bottom: 1px solid white;
+}
+
+/* Elementos do Input */
+.atom-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--token-font-body);
+    font-size: 1.15rem;
+    color: var(--token-color-text-dark);
+}
+
+.atom-input::placeholder {
+    color: var(--token-color-text-muted);
+    opacity: 0.5;
+}
+
+.atom-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--token-color-text-muted);
+}
+
+.atom-button-clear {
+    background: transparent;
+    border: none;
+    color: var(--token-color-text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.atom-button-clear:hover {
+    background-color: var(--token-color-rule);
+    color: var(--token-color-text-dark);
+}
+
+.atom-button-search {
+    flex: 0 0 auto;
+    background-color: var(--token-color-green-ink);
+    color: var(--token-color-paper);
+    border: 1px solid var(--token-color-text-dark);
+    border-radius: var(--token-radius-sm);
+    padding: 6px 12px;
+    font-family: var(--token-font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 rgba(44, 32, 24, 0.22);
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.atom-button-search:hover {
+    background-color: #335a3f;
+}
+
+.atom-button-search:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 rgba(44, 32, 24, 0.22);
+}
+
+/* Badges e Fichas */
+.atom-badge-count {
+    font-family: var(--token-font-sans);
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--token-color-green-ink);
+    background-color: var(--token-color-green-light);
+    border: 1px solid var(--token-color-green-ink);
+    padding: 3px 10px;
+    border-radius: var(--token-radius-sm);
+}
+
+.atom-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(30, 77, 60, 0.2);
+    border-top: 2px solid var(--token-color-green-ink);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.atom-loader-text {
+    font-family: var(--token-font-sans);
+    font-size: 0.85rem;
+    color: var(--token-color-text-muted);
+}
+
+.atom-icon-empty {
+    width: 48px;
+    height: 48px;
+    color: var(--token-color-text-muted);
+    margin-bottom: var(--token-space-xs);
+}
+
+.atom-empty-text {
+    font-family: var(--token-font-sans);
+    font-size: 0.95rem;
+    color: var(--token-color-text-muted);
+}
+
+/* Erros */
+.atom-error-card {
+    background-color: var(--token-color-error-bg);
+    border: 1px solid var(--token-color-red-ink);
+    color: var(--token-color-red-ink);
+    padding: var(--token-space-sm);
+    border-radius: var(--token-radius-sm);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Cards de Resultados específicos */
+.card-id {
+    font-family: var(--token-font-body);
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: var(--token-color-red-ink);
+    border: 1px dashed var(--token-color-red-ink);
+    padding: 2px 6px;
+    border-radius: var(--token-radius-sm);
+}
+
+.card-comb-num {
+    font-family: var(--token-font-body);
+    font-size: 0.75rem;
+    color: var(--token-color-text-muted);
+}
+
+.card-name {
+    font-family: var(--token-font-heading);
+    font-size: 1.3rem;
+    color: var(--token-color-text-dark);
+    margin: var(--token-space-xs) 0;
+}
+
+.card-combination {
+    font-family: var(--token-font-body);
+    font-size: 0.85rem;
+    background-color: #f1eddd;
+    border-left: 3px solid var(--token-color-gold);
+    padding: var(--token-space-xs) var(--token-space-sm);
+    color: var(--token-color-text-dark);
+    word-break: break-all;
+}
+
+/* Elementos do Rodapé */
+.atom-footer-text {
+    font-family: var(--token-font-sans);
+    font-size: 0.75rem;
+    color: var(--token-color-text-muted);
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+    margin: 0;
+    display: block;
+}
+
+/* Paginação e Carregamento Retro */
+.mol-load-more-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--token-space-md);
+    margin-bottom: var(--token-space-sm);
+    width: 100%;
+    overflow-anchor: none;
+}
+
+.atom-button-load-more {
+    background-color: var(--token-color-paper);
+    color: var(--token-color-green-ink);
+    border: 2px solid var(--token-color-green-ink);
+    font-family: var(--token-font-heading);
+    font-size: 0.95rem;
+    font-weight: bold;
+    padding: 8px 24px;
+    border-radius: var(--token-radius-sm);
+    cursor: pointer;
+    box-shadow: var(--token-shadow-flat);
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.2s ease;
+}
+
+.atom-button-load-more:hover {
+    background-color: var(--token-color-green-light);
+}
+
+.atom-button-load-more:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
+   7. RESPONSIVIDADE E RETRAÇÃO (MEDIA QUERIES)
+   -------------------------------------------------------------------------- */
+/* Dispositivos Médios e Tablets */
+@media (max-width: 900px) {
+    .mol-tab-strip {
+        display: none; /* Oculta abas físicas para evitar transbordamento horizontal */
+    }
+}
+
+/* Dispositivos Pequenos e Celulares */
+@media (max-width: 768px) {
+    body {
+        --body-padding-y: var(--token-space-sm);
+        padding-top: var(--body-padding-y);
+        padding-bottom: calc(var(--body-padding-y) + env(safe-area-inset-bottom));
+        padding-left: var(--token-space-xs);
+        padding-right: var(--token-space-xs);
+        background-image: none;
+        background-color: var(--token-color-paper); /* Em celulares, exibe diretamente o papel */
+    }
+
+    .org-phone-book {
+        box-shadow: none;
+        border: none;
+    }
+
+    .mol-spiral-binding {
+        display: none; /* Remove anéis espirais em telas pequenas */
+    }
+
+    .mol-page-content {
+        padding: var(--token-space-md) var(--token-space-sm);
+        border-left: none; /* Remove margem de caderno para expandir espaço do texto */
+    }
+
+    .atom-title {
+        font-size: 1.7rem;
+    }
+
+    .tpl-results-grid {
+        grid-template-columns: 1fr;
+        gap: var(--token-space-sm);
+    }
+
+    .result-card {
+        padding: var(--token-space-sm);
+    }
+}
+
+/* ==========================================================================
+   8. RETRO 90S PAGER (BACK TO TOP WIDGET)
+   ========================================================================== */
+.retro-pager {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 105px;
+    height: 70px;
+    background-color: #1c1c1f;
+    border: 3px solid #3a3a3e;
+    border-radius: 8px;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5), inset -2px -2px 0px #000;
+    z-index: 1000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+}
+
+.retro-pager.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.retro-pager:hover {
+    transform: scale(1.05);
+    animation: pager-vibrate 0.15s linear infinite;
+}
+
+.retro-pager:active {
+    transform: scale(0.95);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.pager-body {
+    width: 100%;
+    height: 100%;
+    padding: 8px 6px 6px 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.pager-screen {
+    background-color: #7b946d; /* LCD verde clássico de Bip/Pager */
+    border: 2px solid #000;
+    border-radius: 3px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+.pager-text {
+    font-family: var(--token-font-body);
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #0b1507;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.5px;
+    text-align: center;
+    white-space: nowrap;
+    animation: pager-blink 1s step-end infinite;
+}
+
+.pager-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    height: 8px;
+    margin-top: 2px;
+}
+
+.pager-btn {
+    width: 12px;
+    height: 6px;
+    border: 1px solid #000;
+    border-radius: 1px;
+    box-shadow: inset 1px 1px 1px rgba(255,255,255,0.3);
+}
+
+.btn-red {
+    background-color: var(--token-color-red-ink);
+}
+
+.btn-blue {
+    background-color: #2e62a6;
+}
+
+.pager-clip {
+    position: absolute;
+    top: -5px;
+    left: 12px;
+    width: 28px;
+    height: 6px;
+    background-color: #2b2b2e;
+    border: 1px solid #111;
+    border-radius: 1px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+@keyframes pager-vibrate {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(1px, 1px) rotate(0.5deg); }
+    50% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+    75% { transform: translate(-1px, 1px) rotate(0deg); }
+    100% { transform: translate(1px, -1px) rotate(0.5deg); }
+}
+
+@keyframes pager-blink {
+    50% { opacity: 0.4; }
+}
+
+/* Responsividade do Pager */
+@media (max-width: 768px) {
+    .retro-pager {
+        bottom: 16px;
+        right: 16px;
+        width: 90px;
+        height: 62px;
+    }
+    .pager-screen {
+        height: 28px;
+    }
+    .pager-text {
+        font-size: 0.65rem;
+    }
+    
+    /* Evita que o Pager sobreponha o texto do rodapé no mobile */
+    .org-footer {
+        padding-bottom: 85px;
+    }
+}

@@ -1,0 +1,21 @@
+# Banco completo (~500 MB) — gere localmente (ver README)
+generate_names/db/bigon_bookX.db
+generate_names/db/bigon_bookX.db-wal
+generate_names/db/bigon_bookX.db-shm
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+/bin/
+/dist/
+coverage.out
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

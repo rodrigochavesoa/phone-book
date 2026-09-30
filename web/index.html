@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Telefônica - Busca Inteligente</title>
+    <!-- Google Fonts: Outfit (Sans), Special Elite (Typewriter), Courier Prime (Monospace) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <!-- CSS Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Favicon Retro Pager -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📟</text></svg>">
+</head>
+<body class="tpl-desk-wrapper">
+    <!-- Organismo: Caderno/Agenda Telefônica Física -->
+    <div class="org-phone-book tpl-phone-book">
+        
+        <!-- Elemento de Design: Anéis/Espiral de Caderno Clássico -->
+        <div class="mol-spiral-binding">
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+            <div class="atom-binding-ring"></div>
+        </div>
+
+        <!-- Tiras de Índice Alfabético Físico (Abas da Agenda) -->
+        <div class="mol-tab-strip">
+            <div class="atom-tab active-tab">A-D</div>
+            <div class="atom-tab">E-H</div>
+            <div class="atom-tab">I-L</div>
+            <div class="atom-tab">M-P</div>
+            <div class="atom-tab">Q-T</div>
+            <div class="atom-tab">U-Z</div>
+        </div>
+
+        <!-- Conteúdo Interno da Agenda -->
+        <div class="mol-page-content">
+            
+            <!-- Organismo: Cabeçalho da Agenda -->
+            <header class="org-header">
+                <div class="logo atom-logo">
+                    <span class="retro-stamp">Big-O</span> Book
+                </div>
+                <h1 class="atom-title">Busca de Combinações</h1>
+                <p class="subtitle atom-subtitle">Índice Geral de Registros. Pesquise por ID, nome, sobrenome ou nome completo.</p>
+                <div class="atom-horizontal-divider"></div>
+            </header>
+
+            <main class="org-main">
+                
+                <!-- Organismo: Formulário de Pesquisa -->
+                <section class="org-search-section">
+                    <form id="search-form">
+                        <!-- Molécula: Campo de Busca Completo -->
+                        <div class="mol-search-bar">
+                            <svg class="search-icon atom-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                class="atom-input"
+                                placeholder="Ex.: 99, Carlos, Almeida, Ana B..." 
+                                autocomplete="off"
+                                maxlength="200"
+                                aria-label="Campo de busca"
+                                autofocus
+                            >
+                            <button type="button" id="clear-btn" class="clear-button atom-button-clear" aria-label="Limpar busca" hidden>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                            <button type="submit" id="search-btn" class="atom-button-search" aria-label="Executar busca">
+                                Buscar
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Organismo: Lista de Resultados -->
+                <section class="org-results-section">
+                    <!-- Molécula: Metadados da Busca -->
+                    <div class="results-meta mol-results-meta">
+                        <span id="results-count" class="results-count atom-badge-count" hidden>0 resultados</span>
+                        
+                        <!-- Molécula: Loader Animado -->
+                        <div id="loader" class="loader mol-loader" hidden>
+                            <div class="spinner atom-spinner"></div>
+                            <span class="atom-loader-text">Consultando fichário...</span>
+                        </div>
+                    </div>
+
+                    <!-- Árvore de Mensagem de Erro -->
+                    <div id="error-message" class="error-card atom-error-card" hidden></div>
+
+                    <!-- Template: Grid de Resultados de Fichas -->
+                    <div id="results-container" class="results-grid tpl-results-grid">
+                        <!-- Ficha Inicial Estática (Estado Vazio) -->
+                        <div class="empty-state mol-empty-state">
+                            <svg class="atom-icon-empty" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <p class="atom-empty-text">Abra a agenda digitando os termos de pesquisa acima.</p>
+                        </div>
+                    </div>
+
+                    <!-- Molécula: Paginação / Botão Ver Mais -->
+                    <div class="mol-load-more-wrapper">
+                        <button type="button" id="load-more-btn" class="atom-button-load-more" hidden>Carregar mais fichas...</button>
+                    </div>
+                </section>
+            </main>
+            
+            <!-- Organismo: Rodapé -->
+            <footer class="org-footer">
+                <div class="atom-horizontal-divider"></div>
+                <p class="atom-footer-text">Índice de Telefones Big-O &copy; 1996 - 2026. Todos os direitos reservados.</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Elemento Retro: Bip / Pager de Anos 90 (Voltar ao Topo) -->
+    <div id="retro-pager" class="retro-pager" title="Voltar ao Topo">
+        <div class="pager-body">
+            <div class="pager-clip"></div>
+            <div class="pager-screen">
+                <div id="pager-text" class="pager-text">▲ TOPO ▲</div>
+            </div>
+            <div class="pager-buttons">
+                <div class="pager-btn btn-red"></div>
+                <div class="pager-btn btn-blue"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Principal -->
+    <script src="app.js?v=20260715-confirmed-search"></script>
+</body>
+</html>
