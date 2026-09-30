@@ -69,31 +69,7 @@ O processo pode demorar; interrompa com `Ctrl+C` se quiser — a geração retom
 
 Rode os comandos **na raiz deste repositório** (clone de `phone-book`).
 
-## Publicar em github.com/rodrigochavesoa/phone-book
-
 O código também existe como pasta `phone_book/` no monorepo [into_to_algorithms](https://github.com/rodrigochavesoa/into_to_algorithms). O repositório **[phone-book](https://github.com/rodrigochavesoa/phone-book)** é a cópia **standalone** (raiz = este projeto, sem o prefixo `phone_book/`).
-
-Se você rodou `git commit` dentro desta pasta mas o push foi para `into_to_algorithms`, o Git estava usando o repositório **pai**. Para publicar no `phone-book`:
-
-```bash
-cd phone_book   # ou a raiz do clone de phone-book
-chmod +x scripts/publish-to-phone-book.sh
-./scripts/publish-to-phone-book.sh
-```
-
-Ou manualmente:
-
-```bash
-cd phone_book
-git init -b main
-git add .
-git status   # bigon_bookX.db não deve aparecer
-git commit -m "Initial commit: phone-book standalone"
-git remote add origin https://github.com/rodrigochavesoa/phone-book.git
-git push -u origin main
-```
-
-**Não** use `git remote add origin` com a URL do monorepo neste diretório após o `git init` local — o `origin` do `phone-book` deve ser só `https://github.com/rodrigochavesoa/phone-book.git`.
 
 ## Testar a API
 
